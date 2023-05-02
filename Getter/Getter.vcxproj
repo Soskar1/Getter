@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Data.cpp" />
+    <ClCompile Include="Experimentator.cpp" />
     <ClCompile Include="Getter.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Test.cpp" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
+    <ClInclude Include="Experimentator.h" />
     <ClInclude Include="Getter.h" />
     <ClInclude Include="Random.h" />
   </ItemGroup>
