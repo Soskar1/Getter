@@ -13,25 +13,24 @@ namespace Getter {
 			Node* left;
 			Node* right;
 
-			Node(const Data& value);
+			Node(Data& value);
 			~Node();
 
 			int CalculateBalanceFactor() const;
 			void UpdateHeight();
 		};
 
-		std::vector<std::vector<Data>>* m_Data;
-		Node* m_Root;
-		size_t m_Size;
-		Data m_DefaultValue;
+		Node* m_IntRoot;
+		Node* m_StringRoot;
+		Node* m_DoubleRoot;
 
-		Node* RotateLeft(Node* node);
-		Node* RotateRight(Node* node);
-		Node* Insert(Node* node, const Data& value);
-		Node* Remove(Node* node, const Data& value);
-		Node* GetMinimumNode(Node* node);
+		Node* RotateLeft(Node** root, Node* node);
+		Node* RotateRight(Node** root, Node* node);
+		Node* IntInsert(Node* node, Data& value);
+		Node* StringInsert(Node* node, Data& value);
+		Node* DoubleInsert(Node* node, Data& value);
 	public:
-		TreeGetter(const std::vector<std::vector<Data>>& data);
+		TreeGetter(std::vector<std::vector<Data>>& data);
 		~TreeGetter();
 
 		Data* SearchByInt(const int& value) const;
