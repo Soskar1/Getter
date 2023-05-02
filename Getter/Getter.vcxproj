@@ -129,11 +129,14 @@
   <ItemGroup>
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="Getter.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="TreeGetterExample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
     <ClInclude Include="Getter.h" />
+    <ClInclude Include="Random.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
