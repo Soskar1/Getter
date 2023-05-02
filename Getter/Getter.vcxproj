@@ -128,10 +128,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Data.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Experimentator.cpp" />
+    <ClCompile Include="Getter.cpp" />
+    <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="TreeGetterExample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
+    <ClInclude Include="Experimentator.h" />
+    <ClInclude Include="Getter.h" />
+    <ClInclude Include="Random.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
