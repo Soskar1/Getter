@@ -26,12 +26,41 @@ namespace Getter {
 
 		Node* RotateLeft(Node** root, Node* node);
 		Node* RotateRight(Node** root, Node* node);
+
 		Node* IntInsert(Node* node, Data& value);
 		Node* StringInsert(Node* node, Data& value);
 		Node* DoubleInsert(Node* node, Data& value);
 	public:
 		TreeGetter(std::vector<std::vector<Data>>& data);
 		~TreeGetter();
+
+		Data* SearchByInt(const int& value) const;
+		Data* SearchByDouble(const double& value) const;
+		Data* SearchByString(const std::string& value) const;
+	};
+
+	class HashGetter {
+		struct LinkedList {
+			LinkedList* next;
+			Data* value;
+
+			LinkedList();
+			~LinkedList();
+		};
+
+		size_t HashInt(Data& value) const;
+		size_t HashDouble(Data& value) const;
+		size_t HashString(Data& value) const;
+
+		LinkedList* m_IntHashTable;
+		LinkedList* m_DoubleHashTable;
+		LinkedList* m_StringHashTable;
+		size_t m_Capacity;
+
+		void Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable);
+	public:
+		HashGetter(std::vector<std::vector<Data>>& data);
+		~HashGetter();
 
 		Data* SearchByInt(const int& value) const;
 		Data* SearchByDouble(const double& value) const;

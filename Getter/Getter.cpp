@@ -1,5 +1,7 @@
 #include "Getter.h"
 
+
+
 namespace Getter {
 	TreeGetter::Node::Node(Data& value)
 	{
@@ -11,6 +13,7 @@ namespace Getter {
 
 	TreeGetter::Node::~Node()
 	{
+		delete value;
 		delete left;
 		delete right;
 	}
@@ -294,6 +297,96 @@ namespace Getter {
 			}
 		}
 
+		return nullptr;
+	}
+
+	HashGetter::LinkedList::LinkedList()
+	{
+		value = nullptr;
+		next = nullptr;
+	}
+
+	HashGetter::LinkedList::~LinkedList()
+	{
+		delete next;
+	}
+
+	size_t HashGetter::HashInt(Data& value) const
+	{
+		return value.intField % m_Capacity;
+	}
+
+	size_t HashGetter::HashDouble(Data& value) const
+	{
+		return (int)value.doubleField % m_Capacity;
+	}
+
+	size_t HashGetter::HashString(Data& value) const
+	{
+		if (value.stringField.size() == 0) {
+			return 0;
+		}
+
+		return (value.stringField.size() + value.stringField[0]) % m_Capacity;
+	}
+
+	void HashGetter::Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable)
+	{
+		if (hashTable[hashIndex].value == nullptr) {
+			hashTable[hashIndex].value = &value;
+			return;
+		}
+
+		if (hashTable[hashIndex].next == nullptr) {
+			hashTable[hashIndex].next = new LinkedList();
+			hashTable[hashIndex].next->value = &value;
+			return;
+		}
+
+		LinkedList* linkedList = hashTable[hashIndex].next;
+		while (linkedList->next != nullptr) {
+			if (linkedList->value == &value) {
+				return;
+			}
+
+			linkedList = linkedList->next;
+		}
+
+		linkedList->next = new LinkedList();
+		linkedList->next->value = &value;
+	}
+
+	HashGetter::HashGetter(std::vector<std::vector<Data>>& data)
+	{
+		m_Capacity = data.size() * 2;
+		m_IntHashTable = new LinkedList[m_Capacity];
+
+		for (int i = 0; i < data.size(); ++i) {
+			for (int j = 0; j < data[i].size(); ++j) {
+				Insert(data[i][j], HashInt(data[i][j]), m_IntHashTable);
+				Insert(data[i][j], HashDouble(data[i][j]), m_DoubleHashTable);
+				Insert(data[i][j], HashString(data[i][j]), m_StringHashTable);
+			}
+		}
+	}
+
+	HashGetter::~HashGetter()
+	{
+		delete[] m_IntHashTable;
+	}
+
+	Data* HashGetter::SearchByInt(const int& value) const
+	{
+		return nullptr;
+	}
+
+	Data* HashGetter::SearchByDouble(const double& value) const
+	{
+		return nullptr;
+	}
+
+	Data* HashGetter::SearchByString(const std::string& value) const
+	{
 		return nullptr;
 	}
 }
