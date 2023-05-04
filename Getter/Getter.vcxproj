@@ -130,6 +130,7 @@
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="Experimentator.cpp" />
     <ClCompile Include="Getter.cpp" />
+    <ClCompile Include="HashGetterExample.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="TreeGetterExample.cpp" />

@@ -48,9 +48,9 @@ namespace Getter {
 			~LinkedList();
 		};
 
-		size_t HashInt(Data& value) const;
-		size_t HashDouble(Data& value) const;
-		size_t HashString(Data& value) const;
+		size_t HashInt(const int& value) const;
+		size_t HashDouble(const double& value) const;
+		size_t HashString(const std::string& value) const;
 
 		LinkedList* m_IntHashTable;
 		LinkedList* m_DoubleHashTable;
