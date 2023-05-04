@@ -1,5 +1,7 @@
 #include "Getter.h"
 
+
+
 namespace Getter {
 	TreeGetter::Node::Node(Data& value)
 	{
@@ -11,6 +13,7 @@ namespace Getter {
 
 	TreeGetter::Node::~Node()
 	{
+		delete value;
 		delete left;
 		delete right;
 	}
@@ -291,6 +294,169 @@ namespace Getter {
 			}
 			else if (value > focusNode->value->stringField) {
 				focusNode = focusNode->right;
+			}
+		}
+
+		return nullptr;
+	}
+
+	HashGetter::LinkedList::LinkedList()
+	{
+		value = nullptr;
+		next = nullptr;
+	}
+
+	HashGetter::LinkedList::~LinkedList()
+	{
+		delete next;
+	}
+
+	size_t HashGetter::HashInt(const int& value) const
+	{
+		return value % m_Capacity;
+	}
+
+	size_t HashGetter::HashDouble(const double& value) const
+	{
+		return (int)value % m_Capacity;
+	}
+
+	size_t HashGetter::HashString(const std::string& value) const
+	{
+		if (value.size() == 0) {
+			return 0;
+		}
+
+		return (value.size() + value[0]) % m_Capacity;
+	}
+
+	void HashGetter::Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable)
+	{
+		if (hashTable[hashIndex].value == nullptr) {
+			hashTable[hashIndex].value = &value;
+			return;
+		}
+
+		if (hashTable[hashIndex].next == nullptr) {
+			hashTable[hashIndex].next = new LinkedList();
+			hashTable[hashIndex].next->value = &value;
+			return;
+		}
+
+		LinkedList* linkedList = hashTable[hashIndex].next;
+		while (linkedList->next != nullptr) {
+			if (linkedList->value == &value) {
+				return;
+			}
+
+			linkedList = linkedList->next;
+		}
+
+		linkedList->next = new LinkedList();
+		linkedList->next->value = &value;
+	}
+
+	HashGetter::HashGetter(std::vector<std::vector<Data>>& data)
+	{
+		m_Capacity = data.size() * 2;
+		m_IntHashTable = new LinkedList[m_Capacity];
+		m_DoubleHashTable = new LinkedList[m_Capacity];
+		m_StringHashTable = new LinkedList[m_Capacity];
+
+		for (int i = 0; i < data.size(); ++i) {
+			for (int j = 0; j < data[i].size(); ++j) {
+				Insert(data[i][j], HashInt(data[i][j].intField), m_IntHashTable);
+				Insert(data[i][j], HashDouble(data[i][j].doubleField), m_DoubleHashTable);
+				Insert(data[i][j], HashString(data[i][j].stringField), m_StringHashTable);
+			}
+		}
+	}
+
+	HashGetter::~HashGetter()
+	{
+		delete[] m_IntHashTable;
+		delete[] m_DoubleHashTable;
+		delete[] m_StringHashTable;
+	}
+
+	Data* HashGetter::SearchByInt(const int& value) const
+	{
+		size_t hashIndex = HashInt(value);
+
+		if (m_IntHashTable[hashIndex].value == nullptr) {
+			return nullptr;
+		}
+
+		if (m_IntHashTable[hashIndex].value->intField == value) {
+			return m_IntHashTable[hashIndex].value;
+		}
+
+		if (m_IntHashTable[hashIndex].next == nullptr) {
+			return nullptr;
+		}
+
+		LinkedList* linkedList = &m_IntHashTable[hashIndex];
+		while (linkedList->next != nullptr) {
+			linkedList = linkedList->next;
+
+			if (linkedList->value->intField == value) {
+				return linkedList->value;
+			}
+		}
+
+		return nullptr;
+	}
+
+	Data* HashGetter::SearchByDouble(const double& value) const
+	{
+		size_t hashIndex = HashDouble(value);
+
+		if (m_DoubleHashTable[hashIndex].value == nullptr) {
+			return nullptr;
+		}
+
+		if (m_DoubleHashTable[hashIndex].value->doubleField == value) {
+			return m_DoubleHashTable[hashIndex].value;
+		}
+
+		if (m_DoubleHashTable[hashIndex].next == nullptr) {
+			return nullptr;
+		}
+
+		LinkedList* linkedList = &m_DoubleHashTable[hashIndex];
+		while (linkedList->next != nullptr) {
+			linkedList = linkedList->next;
+
+			if (linkedList->value->doubleField == value) {
+				return linkedList->value;
+			}
+		}
+
+		return nullptr;
+	}
+
+	Data* HashGetter::SearchByString(const std::string& value) const
+	{
+		size_t hashIndex = HashString(value);
+
+		if (m_StringHashTable[hashIndex].value == nullptr) {
+			return nullptr;
+		}
+
+		if (m_StringHashTable[hashIndex].value->stringField == value) {
+			return m_IntHashTable[hashIndex].value;
+		}
+
+		if (m_StringHashTable[hashIndex].next == nullptr) {
+			return nullptr;
+		}
+
+		LinkedList* linkedList = &m_StringHashTable[hashIndex];
+		while (linkedList->next != nullptr) {
+			linkedList = linkedList->next;
+
+			if (linkedList->value->stringField == value) {
+				return linkedList->value;
 			}
 		}
 
