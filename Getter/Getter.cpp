@@ -13,7 +13,6 @@ namespace Getter {
 
 	TreeGetter::Node::~Node()
 	{
-		delete value;
 		delete left;
 		delete right;
 	}
