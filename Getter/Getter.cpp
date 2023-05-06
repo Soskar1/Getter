@@ -415,7 +415,6 @@ namespace Getter {
 
 	TreeGetter::TreeGetter()
 	{
-		m_DataRef = nullptr;
 		m_IntRoot = nullptr;
 		m_StringRoot = nullptr;
 		m_DoubleRoot = nullptr;
@@ -423,16 +422,7 @@ namespace Getter {
 
 	TreeGetter::TreeGetter(std::vector<std::vector<Data>>& data)
 	{
-		m_DataRef = &data;
-		m_IntRoot = nullptr;
-		m_StringRoot = nullptr;
-		m_DoubleRoot = nullptr;
-
-		for (int i = 0; i < data.size(); ++i) {
-			for (int j = 0; j < data[i].size(); ++j) {
-				Insert(data[i][j]);
-			}
-		}
+		Create(data);
 	}
 
 	TreeGetter::~TreeGetter()
@@ -453,8 +443,6 @@ namespace Getter {
 		m_IntRoot = nullptr;
 		m_DoubleRoot = nullptr;
 		m_StringRoot = nullptr;
-
-		m_DataRef = &data;
 
 		for (int i = 0; i < data.size(); ++i) {
 			for (int j = 0; j < data[i].size(); ++j) {
@@ -546,6 +534,14 @@ namespace Getter {
 	{
 		value = nullptr;
 		next = nullptr;
+		allowedToRewrite = false;
+	}
+
+	HashGetter::LinkedList::LinkedList(Data& value)
+	{
+		this->value = &value;
+		next = nullptr;
+		allowedToRewrite = false;
 	}
 
 	HashGetter::LinkedList::~LinkedList()
@@ -572,10 +568,18 @@ namespace Getter {
 		return (value.size() + value[0]) % m_Capacity;
 	}
 
+	void HashGetter::Insert(Data& value)
+	{
+		Insert(value, HashInt(value.intField), m_IntHashTable);
+		Insert(value, HashDouble(value.doubleField), m_DoubleHashTable);
+		Insert(value, HashString(value.stringField), m_StringHashTable);
+	}
+
 	void HashGetter::Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable)
 	{
-		if (hashTable[hashIndex].value == nullptr) {
+		if (hashTable[hashIndex].value == nullptr || hashTable[hashIndex].allowedToRewrite) {
 			hashTable[hashIndex].value = &value;
+			hashTable[hashIndex].allowedToRewrite = false;
 			return;
 		}
 
@@ -584,10 +588,20 @@ namespace Getter {
 			hashTable[hashIndex].next->value = &value;
 			return;
 		}
+		else if (hashTable[hashIndex].next->allowedToRewrite) {
+			hashTable[hashIndex].next->value = &value;
+			hashTable[hashIndex].next->allowedToRewrite = false;
+		}
 
 		LinkedList* linkedList = hashTable[hashIndex].next;
 		while (linkedList->next != nullptr) {
 			if (linkedList->value == &value) {
+				return;
+			}
+
+			if (linkedList->next->allowedToRewrite) {
+				linkedList->next->value = &value;
+				linkedList->next->allowedToRewrite = false;
 				return;
 			}
 
@@ -598,20 +612,36 @@ namespace Getter {
 		linkedList->next->value = &value;
 	}
 
-	HashGetter::HashGetter(std::vector<std::vector<Data>>& m_DataRef)
+	void HashGetter::Remove(Data& value)
 	{
-		m_Capacity = m_DataRef.size() * 2;
-		m_IntHashTable = new LinkedList[m_Capacity];
-		m_DoubleHashTable = new LinkedList[m_Capacity];
-		m_StringHashTable = new LinkedList[m_Capacity];
+		Remove(value, HashInt(value.intField), m_IntHashTable);
+		Remove(value, HashDouble(value.doubleField), m_DoubleHashTable);
+		Remove(value, HashString(value.stringField), m_StringHashTable);
+	}
 
-		for (int i = 0; i < m_DataRef.size(); ++i) {
-			for (int j = 0; j < m_DataRef[i].size(); ++j) {
-				Insert(m_DataRef[i][j], HashInt(m_DataRef[i][j].intField), m_IntHashTable);
-				Insert(m_DataRef[i][j], HashDouble(m_DataRef[i][j].doubleField), m_DoubleHashTable);
-				Insert(m_DataRef[i][j], HashString(m_DataRef[i][j].stringField), m_StringHashTable);
-			}
+	void HashGetter::Remove(Data& value, const size_t& hashIndex, LinkedList*& hashTable)
+	{
+		LinkedList* linkedList = &hashTable[hashIndex];
+
+		while (linkedList->value != &value) {
+			linkedList = linkedList->next;
 		}
+
+		linkedList->allowedToRewrite = true;
+	}
+
+	HashGetter::HashGetter()
+	{
+		m_IntHashTable = nullptr;
+		m_DoubleHashTable = nullptr;
+		m_StringHashTable = nullptr;
+
+		m_Capacity = 0;
+	}
+
+	HashGetter::HashGetter(std::vector<std::vector<Data>>& data)
+	{
+		Create(data);
 	}
 
 	HashGetter::~HashGetter()
@@ -619,6 +649,26 @@ namespace Getter {
 		delete[] m_IntHashTable;
 		delete[] m_DoubleHashTable;
 		delete[] m_StringHashTable;
+	}
+
+	void HashGetter::Create(std::vector<std::vector<Data>>& data)
+	{
+		if (m_IntHashTable != nullptr || m_DoubleHashTable != nullptr || m_StringHashTable != nullptr) {
+			delete[] m_IntHashTable;
+			delete[] m_DoubleHashTable;
+			delete[] m_StringHashTable;
+		}
+
+		m_Capacity = data.size() * data[0].size();
+		m_IntHashTable = new LinkedList[m_Capacity];
+		m_DoubleHashTable = new LinkedList[m_Capacity];
+		m_StringHashTable = new LinkedList[m_Capacity];
+
+		for (int i = 0; i < data.size(); ++i) {
+			for (int j = 0; j < data[i].size(); ++j) {
+				Insert(data[i][j]);
+			}
+		}
 	}
 
 	Data* HashGetter::SearchByInt(const int& value) const
@@ -703,5 +753,15 @@ namespace Getter {
 		}
 
 		return nullptr;
+	}
+	
+	void HashGetter::Update(const UpdateOperation& updateOperation, Data& value)
+	{
+		if (updateOperation == UpdateOperation::insert) {
+			Insert(value);
+		}
+		else {
+			Remove(value);
+		}
 	}
 }

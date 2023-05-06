@@ -25,8 +25,6 @@ namespace Getter {
 			void UpdateHeight();
 		};
 
-		std::vector<std::vector<Data>>* m_DataRef;
-
 		Node* m_IntRoot;
 		Node* m_StringRoot;
 		Node* m_DoubleRoot;
@@ -64,8 +62,10 @@ namespace Getter {
 		struct LinkedList {
 			LinkedList* next;
 			Data* value;
+			bool allowedToRewrite;
 
 			LinkedList();
+			LinkedList(Data& value);
 			~LinkedList();
 		};
 
@@ -78,14 +78,23 @@ namespace Getter {
 		LinkedList* m_StringHashTable;
 		size_t m_Capacity;
 
+		void Insert(Data& value);
 		void Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable);
+
+		void Remove(Data& value);
+		void Remove(Data& value, const size_t& hashIndex, LinkedList*& hashTable);
 	public:
-		HashGetter(std::vector<std::vector<Data>>& m_DataRef);
+		HashGetter();
+		HashGetter(std::vector<std::vector<Data>>& data);
 		~HashGetter();
+
+		void Create(std::vector<std::vector<Data>>& data);
 
 		Data* SearchByInt(const int& value) const;
 		Data* SearchByDouble(const double& value) const;
 		Data* SearchByString(const std::string& value) const;
+
+		void Update(const UpdateOperation& updateOperation, Data& value);
 	};
 }
 #endif
