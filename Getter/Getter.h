@@ -5,6 +5,12 @@
 #include "Data.h"
 
 namespace Getter {
+	enum UpdateOperation {
+		insert,
+		remove,
+		edit
+	};
+
 	class TreeGetter {
 	private:
 		struct Node {
@@ -20,6 +26,8 @@ namespace Getter {
 			void UpdateHeight();
 		};
 
+		std::vector<std::vector<Data>>* m_DataRef;
+
 		Node* m_IntRoot;
 		Node* m_StringRoot;
 		Node* m_DoubleRoot;
@@ -30,13 +38,20 @@ namespace Getter {
 		Node* IntInsert(Node* node, Data& value);
 		Node* StringInsert(Node* node, Data& value);
 		Node* DoubleInsert(Node* node, Data& value);
+
+		void Insert(Data& value);
 	public:
+		TreeGetter();
 		TreeGetter(std::vector<std::vector<Data>>& data);
 		~TreeGetter();
+
+		void Create(std::vector<std::vector<Data>>& data);
 
 		Data* SearchByInt(const int& value) const;
 		Data* SearchByDouble(const double& value) const;
 		Data* SearchByString(const std::string& value) const;
+
+		void Update(const UpdateOperation& updateOperation, Data& value);
 	};
 
 	class HashGetter {
@@ -59,7 +74,7 @@ namespace Getter {
 
 		void Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable);
 	public:
-		HashGetter(std::vector<std::vector<Data>>& data);
+		HashGetter(std::vector<std::vector<Data>>& m_DataRef);
 		~HashGetter();
 
 		Data* SearchByInt(const int& value) const;

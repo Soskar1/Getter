@@ -47,14 +47,5 @@ int main()
     tmp = treeGetter.SearchByString(data[10][5].stringField);
     std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
 
-    tmp = treeGetter.SearchByInt(data[5][10].intField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
-
-    tmp = treeGetter.SearchByDouble(data[5][10].doubleField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
-
-    tmp = treeGetter.SearchByString(data[5][10].stringField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
-
     return 0;
 }

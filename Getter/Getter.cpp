@@ -1,7 +1,5 @@
 #include "Getter.h"
 
-
-
 namespace Getter {
 	TreeGetter::Node::Node(Data& value)
 	{
@@ -208,17 +206,31 @@ namespace Getter {
 		return node;
 	}
 
+	void TreeGetter::Insert(Data& value)
+	{
+		m_IntRoot = IntInsert(m_IntRoot, value);
+		m_StringRoot = StringInsert(m_StringRoot, value);
+		m_DoubleRoot = DoubleInsert(m_DoubleRoot, value);
+	}
+
+	TreeGetter::TreeGetter()
+	{
+		m_DataRef = nullptr;
+		m_IntRoot = nullptr;
+		m_StringRoot = nullptr;
+		m_DoubleRoot = nullptr;
+	}
+
 	TreeGetter::TreeGetter(std::vector<std::vector<Data>>& data)
 	{
+		m_DataRef = &data;
 		m_IntRoot = nullptr;
 		m_StringRoot = nullptr;
 		m_DoubleRoot = nullptr;
 
 		for (int i = 0; i < data.size(); ++i) {
 			for (int j = 0; j < data[i].size(); ++j) {
-				m_IntRoot = IntInsert(m_IntRoot, data[i][j]);
-				m_StringRoot = StringInsert(m_StringRoot, data[i][j]);
-				m_DoubleRoot = DoubleInsert(m_DoubleRoot, data[i][j]);
+				Insert(data[i][j]);
 			}
 		}
 	}
@@ -228,6 +240,27 @@ namespace Getter {
 		delete m_IntRoot;
 		delete m_StringRoot;
 		delete m_DoubleRoot;
+	}
+
+	void TreeGetter::Create(std::vector<std::vector<Data>>& data)
+	{
+		if (m_IntRoot != nullptr || m_StringRoot != nullptr || m_DoubleRoot != nullptr) {
+			delete m_IntRoot;
+			delete m_DoubleRoot;
+			delete m_StringRoot;
+		}
+
+		m_IntRoot = nullptr;
+		m_DoubleRoot = nullptr;
+		m_StringRoot = nullptr;
+
+		m_DataRef = &data;
+
+		for (int i = 0; i < data.size(); ++i) {
+			for (int j = 0; j < data[i].size(); ++j) {
+				Insert(data[i][j]);
+			}
+		}
 	}
 
 	Data* TreeGetter::SearchByInt(const int& value) const
@@ -299,6 +332,19 @@ namespace Getter {
 		return nullptr;
 	}
 
+	void TreeGetter::Update(const UpdateOperation& updateOperation, Data& value)
+	{
+		if (updateOperation == UpdateOperation::insert) {
+			Insert(value);
+		}
+		else if (updateOperation == UpdateOperation::remove) {
+
+		}
+		else if (updateOperation == UpdateOperation::edit) {
+
+		}
+	}
+
 	HashGetter::LinkedList::LinkedList()
 	{
 		value = nullptr;
@@ -355,18 +401,18 @@ namespace Getter {
 		linkedList->next->value = &value;
 	}
 
-	HashGetter::HashGetter(std::vector<std::vector<Data>>& data)
+	HashGetter::HashGetter(std::vector<std::vector<Data>>& m_DataRef)
 	{
-		m_Capacity = data.size() * 2;
+		m_Capacity = m_DataRef.size() * 2;
 		m_IntHashTable = new LinkedList[m_Capacity];
 		m_DoubleHashTable = new LinkedList[m_Capacity];
 		m_StringHashTable = new LinkedList[m_Capacity];
 
-		for (int i = 0; i < data.size(); ++i) {
-			for (int j = 0; j < data[i].size(); ++j) {
-				Insert(data[i][j], HashInt(data[i][j].intField), m_IntHashTable);
-				Insert(data[i][j], HashDouble(data[i][j].doubleField), m_DoubleHashTable);
-				Insert(data[i][j], HashString(data[i][j].stringField), m_StringHashTable);
+		for (int i = 0; i < m_DataRef.size(); ++i) {
+			for (int j = 0; j < m_DataRef[i].size(); ++j) {
+				Insert(m_DataRef[i][j], HashInt(m_DataRef[i][j].intField), m_IntHashTable);
+				Insert(m_DataRef[i][j], HashDouble(m_DataRef[i][j].doubleField), m_DoubleHashTable);
+				Insert(m_DataRef[i][j], HashString(m_DataRef[i][j].stringField), m_StringHashTable);
 			}
 		}
 	}
