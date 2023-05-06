@@ -206,11 +206,211 @@ namespace Getter {
 		return node;
 	}
 
+	TreeGetter::Node* TreeGetter::IntRemove(Node* node, Data& value)
+	{
+		if (node == nullptr) {
+			return node;
+		}
+
+		if (value.intField < node->value->intField) {
+			node->left = IntRemove(node->left, value);
+		}
+		else if (value.intField > node->value->intField) {
+			node->right = IntRemove(node->right, value);
+		}
+		else {
+			if (node->left == nullptr || node->right == nullptr) {
+				Node* tmp = node->left ? node->left : node->right;
+				if (tmp == nullptr) {
+					tmp = node;
+					node = nullptr;
+				}
+				else {
+					*node = *tmp;
+				}
+
+				delete tmp;
+			}
+			else {
+				Node* tmp = GetMinimumNode(node->right);
+				node->value = tmp->value;
+				node->right = IntRemove(node->right, *tmp->value);
+			}
+		}
+
+		if (node == nullptr) {
+			return node;
+		}
+
+		node->UpdateHeight();
+
+		int balanceFactor = node->CalculateBalanceFactor();
+		if (balanceFactor > 1) {
+			if (node->left->CalculateBalanceFactor() >= 0) {
+				return RotateRight(&m_IntRoot, node);
+			}
+			else {
+				node->left = RotateLeft(&m_IntRoot, node->left);
+				return RotateRight(&m_IntRoot, node);
+			}
+		}
+		else if (balanceFactor < -1) {
+			if (node->right->CalculateBalanceFactor() <= 0) {
+				return RotateLeft(&m_IntRoot, node);
+			}
+			else {
+				node->right = RotateRight(&m_IntRoot, node->right);
+				return RotateLeft(&m_IntRoot, node);
+			}
+		}
+
+		return node;
+	}
+
+	TreeGetter::Node* TreeGetter::StringRemove(Node* node, Data& value)
+	{
+		if (node == nullptr) {
+			return node;
+		}
+
+		if (value.stringField < node->value->stringField) {
+			node->left = StringRemove(node->left, value);
+		}
+		else if (value.stringField > node->value->stringField) {
+			node->right = StringRemove(node->right, value);
+		}
+		else {
+			if (node->left == nullptr || node->right == nullptr) {
+				Node* tmp = node->left ? node->left : node->right;
+				if (tmp == nullptr) {
+					tmp = node;
+					node = nullptr;
+				}
+				else {
+					*node = *tmp;
+				}
+
+				delete tmp;
+			}
+			else {
+				Node* tmp = GetMinimumNode(node->right);
+				node->value = tmp->value;
+				node->right = StringRemove(node->right, *tmp->value);
+			}
+		}
+
+		if (node == nullptr) {
+			return node;
+		}
+
+		node->UpdateHeight();
+
+		int balanceFactor = node->CalculateBalanceFactor();
+		if (balanceFactor > 1) {
+			if (node->left->CalculateBalanceFactor() >= 0) {
+				return RotateRight(&m_StringRoot, node);
+			}
+			else {
+				node->left = RotateLeft(&m_IntRoot, node->left);
+				return RotateRight(&m_StringRoot, node);
+			}
+		}
+		else if (balanceFactor < -1) {
+			if (node->right->CalculateBalanceFactor() <= 0) {
+				return RotateLeft(&m_StringRoot, node);
+			}
+			else {
+				node->right = RotateRight(&m_StringRoot, node->right);
+				return RotateLeft(&m_StringRoot, node);
+			}
+		}
+
+		return node;
+	}
+
+	TreeGetter::Node* TreeGetter::DoubleRemove(Node* node, Data& value)
+	{
+		if (node == nullptr) {
+			return node;
+		}
+
+		if (value.doubleField < node->value->doubleField) {
+			node->left = DoubleRemove(node->left, value);
+		}
+		else if (value.doubleField > node->value->doubleField) {
+			node->right = DoubleRemove(node->right, value);
+		}
+		else {
+			if (node->left == nullptr || node->right == nullptr) {
+				Node* tmp = node->left ? node->left : node->right;
+				if (tmp == nullptr) {
+					tmp = node;
+					node = nullptr;
+				}
+				else {
+					*node = *tmp;
+				}
+
+				delete tmp;
+			}
+			else {
+				Node* tmp = GetMinimumNode(node->right);
+				node->value = tmp->value;
+				node->right = DoubleRemove(node->right, *tmp->value);
+			}
+		}
+
+		if (node == nullptr) {
+			return node;
+		}
+
+		node->UpdateHeight();
+
+		int balanceFactor = node->CalculateBalanceFactor();
+		if (balanceFactor > 1) {
+			if (node->left->CalculateBalanceFactor() >= 0) {
+				return RotateRight(&m_DoubleRoot, node);
+			}
+			else {
+				node->left = RotateLeft(&m_DoubleRoot, node->left);
+				return RotateRight(&m_DoubleRoot, node);
+			}
+		}
+		else if (balanceFactor < -1) {
+			if (node->right->CalculateBalanceFactor() <= 0) {
+				return RotateLeft(&m_DoubleRoot, node);
+			}
+			else {
+				node->right = RotateRight(&m_DoubleRoot, node->right);
+				return RotateLeft(&m_DoubleRoot, node);
+			}
+		}
+
+		return node;
+	}
+
+	TreeGetter::Node* TreeGetter::GetMinimumNode(Node* node) const
+	{
+		Node* current = node;
+		while (current->left != nullptr) {
+			current = current->left;
+		}
+
+		return current;
+	}
+
 	void TreeGetter::Insert(Data& value)
 	{
 		m_IntRoot = IntInsert(m_IntRoot, value);
 		m_StringRoot = StringInsert(m_StringRoot, value);
 		m_DoubleRoot = DoubleInsert(m_DoubleRoot, value);
+	}
+
+	void TreeGetter::Remove(Data& value)
+	{
+		m_IntRoot = IntRemove(m_IntRoot, value);
+		m_StringRoot = StringRemove(m_StringRoot, value);
+		m_DoubleRoot = DoubleRemove(m_DoubleRoot, value);
 	}
 
 	TreeGetter::TreeGetter()
@@ -337,11 +537,8 @@ namespace Getter {
 		if (updateOperation == UpdateOperation::insert) {
 			Insert(value);
 		}
-		else if (updateOperation == UpdateOperation::remove) {
-
-		}
-		else if (updateOperation == UpdateOperation::edit) {
-
+		else {
+			Remove(value);
 		}
 	}
 

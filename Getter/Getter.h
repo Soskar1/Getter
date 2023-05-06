@@ -7,8 +7,7 @@
 namespace Getter {
 	enum UpdateOperation {
 		insert,
-		remove,
-		edit
+		remove
 	};
 
 	class TreeGetter {
@@ -38,8 +37,15 @@ namespace Getter {
 		Node* IntInsert(Node* node, Data& value);
 		Node* StringInsert(Node* node, Data& value);
 		Node* DoubleInsert(Node* node, Data& value);
+		
+		Node* IntRemove(Node* node, Data& value);
+		Node* StringRemove(Node* node, Data& value);
+		Node* DoubleRemove(Node* node, Data& value);
+
+		Node* GetMinimumNode(Node* node) const;
 
 		void Insert(Data& value);
+		void Remove(Data& value);
 	public:
 		TreeGetter();
 		TreeGetter(std::vector<std::vector<Data>>& data);
