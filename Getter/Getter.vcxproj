@@ -132,7 +132,8 @@
     <ClCompile Include="Getter.cpp" />
     <ClCompile Include="HashGetterExample.cpp" />
     <ClCompile Include="Random.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="SpeedTest.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="TreeGetterExample.cpp" />
   </ItemGroup>
   <ItemGroup>
