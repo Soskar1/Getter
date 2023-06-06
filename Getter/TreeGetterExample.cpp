@@ -15,6 +15,8 @@
 
 int main()
 {
+    using namespace Getter;
+
     srand((unsigned)time(NULL));
 
     std::vector<std::vector<Data>> data;
@@ -34,27 +36,26 @@ int main()
         data.push_back(tmp);
     }
 
-    Getter::TreeGetter treeGetter(data);
+    TreeGetter<Data, int Data::*> treeGetter;
 
     Data* tmp = nullptr;
 
-    tmp = treeGetter.SearchByInt(data[10][5].intField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
-    
-    tmp = treeGetter.SearchByDouble(data[10][5].doubleField);
+    tmp = treeGetter.Search(25);
     std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
 
-    tmp = treeGetter.SearchByString(data[10][5].stringField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
+    //treeGetter.Update(Getter::UpdateOperation::remove, data[10][5]);
+    //data[10][5].intField = 47;
+    //data[10][5].stringField = "something";
+    //treeGetter.Update(Getter::UpdateOperation::insert, data[10][5]);
 
-    tmp = treeGetter.SearchByInt(data[5][10].intField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
+    //tmp = treeGetter.SearchByInt(data[10][5].intField);
+    //std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
 
-    tmp = treeGetter.SearchByDouble(data[5][10].doubleField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
+    //tmp = treeGetter.SearchByDouble(data[10][5].doubleField);
+    //std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
 
-    tmp = treeGetter.SearchByString(data[5][10].stringField);
-    std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
+    //tmp = treeGetter.SearchByString(data[10][5].stringField);
+    //std::cout << tmp->intField << " " << tmp->doubleField << " " << tmp->stringField << std::endl;
 
     return 0;
 }
