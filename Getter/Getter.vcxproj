@@ -134,9 +134,11 @@
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="SpeedTest.cpp" />
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="testing.cpp" />
     <ClCompile Include="TreeGetterExample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AVLTree.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="Experimentator.h" />
     <ClInclude Include="Getter.h" />
