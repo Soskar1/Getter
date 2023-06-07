@@ -21,7 +21,7 @@ namespace Getter {
 	private:
 		using Field = FieldDataType Structure::*;
 
-		AVLTree<Structure*> m_AVLTree;
+		Tree::AVLTree<Structure*> m_AVLTree;
 		Field m_Field;
 	public:
 		TreeGetter(Field field, const Structure& structure);
