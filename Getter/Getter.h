@@ -104,18 +104,19 @@ namespace Getter {
 	template<class Structure, typename FieldDataType>
 	inline Structure* TreeGetter<Structure, FieldDataType>::Search(const FieldDataType& value) const
 	{
-		return nullptr;
+		return m_AVLTree.Search(value);
 	}
 
-	//template<class Structure, typename Key>
-	//inline void TreeGetter<Structure, Key>::Update(const UpdateOperation& updateOperation, Structure& value)
-	//{
-	//	if (updateOperation == UpdateOperation::insert) {
-	//		m_Root = Insert(m_Root, value);
-	//	}
-	//	else {
-	//		m_Root = Remove(m_Root, value);
-	//	}
-	//}
+	template<class Structure, typename FieldDataType>
+	inline void TreeGetter<Structure, FieldDataType>::Update(const UpdateOperation& updateOperation, Structure& value)
+	{
+		if (updateOperation == UpdateOperation::insert) {
+			m_AVLTree.Insert(&value);
+		}
+
+		if (updateOperation == UpdateOperation::remove) {
+			m_AVLTree.Remove(&value);
+		}
+	}
 }
 #endif

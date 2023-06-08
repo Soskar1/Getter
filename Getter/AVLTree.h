@@ -342,25 +342,27 @@ namespace Tree {
 	template<typename I>
 	inline T AVLTree<T, ValueExtraction>::Search(const I& value) const
 	{
-		//if (m_Root == nullptr) {
-		//	return T();
-		//}
+		if (m_Root == nullptr) {
+			return T();
+		}
 
-		//Node* focusNode = m_Root;
-		//while (focusNode != nullptr) {
-		//	if (value == *focusNode->value) {
-		//		return true;
-		//	}
+		Node* focusNode = m_Root;
+		while (focusNode != nullptr) {
+			I nodeValue = (I)m_ValueExtraction(focusNode->values[0]);
 
-		//	if (value < *focusNode->value) {
-		//		focusNode = focusNode->left;
-		//	}
-		//	else if (value > *focusNode->value) {
-		//		focusNode = focusNode->right;
-		//	}
-		//}
+			if (value == nodeValue) {
+				return focusNode->values[0];
+			}
 
-		//return T();
+			if (value < nodeValue) {
+				focusNode = focusNode->left;
+			}
+			else if (value > nodeValue) {
+				focusNode = focusNode->right;
+			}
+		}
+
+		return T();
 	}
 }
 #endif
