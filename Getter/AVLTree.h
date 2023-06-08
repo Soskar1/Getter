@@ -50,6 +50,9 @@ namespace Tree {
 		void Remove(const T& value);
 		void Edit(const T& oldValue, const T& newValue);
 
+		template<typename I = T>
+		T Search(const I& value) const;
+
 		bool Contains(const T& value) const;
 
 		size_t Size() const;
@@ -308,14 +311,20 @@ namespace Tree {
 
 		Node* focusNode = m_Root;
 		while (focusNode != nullptr) {
-			if (value == *focusNode->value) {
+			if (m_ValueExtraction(value) == m_ValueExtraction(focusNode->values[0])) {
+				auto it = std::find(focusNode->values.begin(), focusNode->values.end(), value);
+
+				if (it == focusNode->values.end()) {
+					return false;
+				}
+
 				return true;
 			}
 
-			if (value < *focusNode->value) {
+			if (m_ValueExtraction(value) < m_ValueExtraction(focusNode->values[0])) {
 				focusNode = focusNode->left;
 			}
-			else if (value > *focusNode->value) {
+			else if (m_ValueExtraction(value) > m_ValueExtraction(focusNode->values[0])) {
 				focusNode = focusNode->right;
 			}
 		}
@@ -327,6 +336,31 @@ namespace Tree {
 	inline size_t AVLTree<T, ValueExtraction>::Size() const
 	{
 		return m_Size;
+	}
+
+	template<typename T, class ValueExtraction>
+	template<typename I>
+	inline T AVLTree<T, ValueExtraction>::Search(const I& value) const
+	{
+		//if (m_Root == nullptr) {
+		//	return T();
+		//}
+
+		//Node* focusNode = m_Root;
+		//while (focusNode != nullptr) {
+		//	if (value == *focusNode->value) {
+		//		return true;
+		//	}
+
+		//	if (value < *focusNode->value) {
+		//		focusNode = focusNode->left;
+		//	}
+		//	else if (value > *focusNode->value) {
+		//		focusNode = focusNode->right;
+		//	}
+		//}
+
+		//return T();
 	}
 }
 #endif

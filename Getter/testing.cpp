@@ -17,15 +17,23 @@ int main()
 {
     using namespace Getter;
 
-    std::vector<Data> data;
-    data.push_back(Data(4, 2.0));
-    data.push_back(Data(25, 0.98));
-    data.push_back(Data(12, 3.5));
-    data.push_back(Data(8, 3.0));
-    data.push_back(Data(120, 20.12));
+    //std::vector<Data> data;
+    //data.push_back(Data(4, 2.0));
+    //data.push_back(Data(25, 0.98));
+    //data.push_back(Data(12, 3.5));
+    //data.push_back(Data(8, 3.0));
+    //data.push_back(Data(120, 20.12));
 
-    TreeGetter<Data, int> getter(&Data::a);
-    getter.Create(data);
+    //TreeGetter<Data, int> getter(&Data::a);
+    //getter.Create(data);
+
+    Tree::AVLTree<int> tree;
+    tree.Insert(5);
+    tree.Insert(14);
+    tree.Insert(5678);
+    tree.Insert(254);
+
+    std::cout << tree.Contains(5);
 
     return 0;
 }
