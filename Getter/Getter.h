@@ -10,24 +10,35 @@ namespace Getter {
 		remove
 	};
 
-	template <class Structure, typename Field, typename FieldDataType>
-	FieldDataType GetFieldValue(const Structure& structure, Field Structure::* field)
-	{
-		return structure.*field;
-	}
-
 	template<class Structure, typename FieldDataType>
 	class TreeGetter {
 	private:
 		using Field = FieldDataType Structure::*;
-
-		Tree::AVLTree<Structure*> m_AVLTree;
 		Field m_Field;
-	public:
-		TreeGetter(Field field, const Structure& structure);
 
-		template<class Container>
-		void Create(const Container& container);
+		struct ValueExtraction {
+			Field m_Field;
+
+			ValueExtraction() : m_Field(nullptr) {}
+			ValueExtraction(Field field) : m_Field(field) {}
+
+			FieldDataType operator()(Structure* structure) const {
+				return (*structure).*m_Field;
+			}
+
+			ValueExtraction& operator=(const ValueExtraction& valueExtraction) {
+				m_Field = valueExtraction.m_Field;
+
+				return *this;
+			}
+		};
+
+		ValueExtraction m_ValueExtraction;
+		Tree::AVLTree<Structure*, ValueExtraction> m_AVLTree;
+	public:
+		TreeGetter(Field field);
+
+		void Create(std::vector<Structure>& arr);
 
 		Structure* Search(const FieldDataType& value) const;
 
@@ -74,37 +85,26 @@ namespace Getter {
 	};*/
 
 	template<class Structure, typename FieldDataType>
-	inline TreeGetter<Structure, FieldDataType>::TreeGetter(Field field, const Structure& structure)
+	inline TreeGetter<Structure, FieldDataType>::TreeGetter(Field field)
 	{
-		m_AVLTree = AVLTree<FieldDataType>();
 		m_Field = field;
+		m_ValueExtraction = ValueExtraction(m_Field);
+		m_AVLTree = Tree::AVLTree<Structure*, ValueExtraction>(m_ValueExtraction);
 	}
 
-	//template<class Structure, typename FieldDataType>
-	//inline FieldDataType TreeGetter<Structure, FieldDataType>::Get()
-	//{
-	//	return GetFieldValue<Structure, FieldDataType, FieldDataType>(*m_StructureRef, m_Field);
-	//}
-
-	//template<class Structure, typename Key>
-	//inline void TreeGetter<Structure, Key>::Create(const std::vector<std::vector<Structure>>& data)
-	//{
-	//	for (int i = 0; i < data.size(); ++i) {
-	//		for (int j = 0; j < data[i].size(); ++j) {
-	//			//avlTree.Insert
-	//		}
-	//	}
-	//}
+	template<class Structure, typename FieldDataType>
+	inline void TreeGetter<Structure, FieldDataType>::Create(std::vector<Structure>& arr)
+	{
+		for (int i = 0; i < arr.size(); ++i) {
+			Structure* structureRef = &arr[i];
+			m_AVLTree.Insert(structureRef);
+		}
+	}
 
 	template<class Structure, typename FieldDataType>
-	template<class Container>
-	inline void TreeGetter<Structure, FieldDataType>::Create(const Container& container)
+	inline Structure* TreeGetter<Structure, FieldDataType>::Search(const FieldDataType& value) const
 	{
-		for (int i = 0; i < container.size(); ++i) {
-			for (int j = 0; j < data[i].size(); ++j) {
-				m_AVLTree.Insert(&data[i][j]);
-			}
-		}
+		return nullptr;
 	}
 
 	//template<class Structure, typename Key>

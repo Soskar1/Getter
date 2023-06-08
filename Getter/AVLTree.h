@@ -260,7 +260,6 @@ namespace Tree {
 	{
 		m_Root = nullptr;
 		m_Size = 0;
-		m_ValueExtraction = GetValue<T>();
 	}
 
 	template<typename T, class ValueExtraction>
