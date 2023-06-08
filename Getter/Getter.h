@@ -5,11 +5,6 @@
 #include "AVLTree.h"
 
 namespace Getter {
-	enum UpdateOperation {
-		insert,
-		remove
-	};
-
 	template<class Structure, typename FieldDataType>
 	class TreeGetter {
 	private:
@@ -41,11 +36,12 @@ namespace Getter {
 		void Create(std::vector<Structure>& arr);
 
 		template<class Container>
-		void Create(Container* container);
+		void Create(const Container& container);
 
 		Structure* Search(const FieldDataType& value) const;
 
-		void Update(const UpdateOperation& updateOperation, const Structure& value);
+		void Insert(const Structure& value);
+		void Remove(const Structure& value);
 	};
 
 	/*class HashGetter {
@@ -105,7 +101,7 @@ namespace Getter {
 
 	template<class Structure, typename FieldDataType>
 	template<class Container>
-	inline void TreeGetter<Structure, FieldDataType>::Create(Container* container)
+	inline void TreeGetter<Structure, FieldDataType>::Create(const Container& container)
 	{
 		for (int i = 0; i < container->size(); ++i) {
 			m_AVLTree.Insert(container->getElement(i));
@@ -119,16 +115,17 @@ namespace Getter {
 	}
 
 	template<class Structure, typename FieldDataType>
-	inline void TreeGetter<Structure, FieldDataType>::Update(const UpdateOperation& updateOperation, const Structure& value)
+	inline void TreeGetter<Structure, FieldDataType>::Insert(const Structure& value)
 	{
-		if (updateOperation == UpdateOperation::insert) {
-			m_AVLTree.Insert(&value);
-		}
-
-		if (updateOperation == UpdateOperation::remove) {
-			m_AVLTree.Remove(&value);
-		}
+		Structure* structureRef = const_cast<Structure*>(&value);
+		m_AVLTree.Insert(structureRef);
 	}
-	
+
+	template<class Structure, typename FieldDataType>
+	inline void TreeGetter<Structure, FieldDataType>::Remove(const Structure& value)
+	{
+		Structure* structureRef = const_cast<Structure*>(&value);
+		m_AVLTree.Remove(structureRef);
+	}
 }
 #endif
