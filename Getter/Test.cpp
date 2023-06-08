@@ -134,8 +134,9 @@
 //// your index structures defined as global variables
 //// up to three, one per field type
 //
-///* YOUR CODE HERE */
-//
+//TreeGetter<Data, int> iGetter(&Data::iField);
+//TreeGetter<Data, string> sGetter(&Data::sField);
+//TreeGetter<Data, double> dGetter(&Data::dField);
 //
 //// throw the following class if function is not implemented
 //class NotImplementedException;
@@ -144,15 +145,14 @@
 //// rebuild indexes from scratch as necessary
 //// use size() and operator[] to access data elements in container
 //void createIndex(DATATYPE dt, const Container& c) {
-//	/* YOUR CODE HERE */
 //	if (dt == DATATYPE::INT) {
-//		throw NotImplementedException();
+//		iGetter.Create(&c);
 //	}
 //	if (dt == DATATYPE::STR) {
-//		throw NotImplementedException();
+//		sGetter.Create(&c);
 //	}
 //	if (dt == DATATYPE::DBL) {
-//		throw NotImplementedException();
+//		dGetter.Create(&c);
 //	}
 //}
 //
@@ -161,6 +161,9 @@
 //// without recreating them
 //void notify(OPCODE op, const Data* value) {
 //	/* YOUR CODE HERE OR EMPTY */
+//	if (op == OPCODE::INS) {
+//		iGetter.Update(UpdateOperation::insert, *value);
+//	}
 //}
 //
 //

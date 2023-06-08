@@ -40,9 +40,12 @@ namespace Getter {
 
 		void Create(std::vector<Structure>& arr);
 
+		template<class Container>
+		void Create(Container* container);
+
 		Structure* Search(const FieldDataType& value) const;
 
-		void Update(const UpdateOperation& updateOperation, Structure& value);
+		void Update(const UpdateOperation& updateOperation, const Structure& value);
 	};
 
 	/*class HashGetter {
@@ -96,8 +99,16 @@ namespace Getter {
 	inline void TreeGetter<Structure, FieldDataType>::Create(std::vector<Structure>& arr)
 	{
 		for (int i = 0; i < arr.size(); ++i) {
-			Structure* structureRef = &arr[i];
-			m_AVLTree.Insert(structureRef);
+			m_AVLTree.Insert(&arr[i]);
+		}
+	}
+
+	template<class Structure, typename FieldDataType>
+	template<class Container>
+	inline void TreeGetter<Structure, FieldDataType>::Create(Container* container)
+	{
+		for (int i = 0; i < container->size(); ++i) {
+			m_AVLTree.Insert(container->getElement(i));
 		}
 	}
 
@@ -108,7 +119,7 @@ namespace Getter {
 	}
 
 	template<class Structure, typename FieldDataType>
-	inline void TreeGetter<Structure, FieldDataType>::Update(const UpdateOperation& updateOperation, Structure& value)
+	inline void TreeGetter<Structure, FieldDataType>::Update(const UpdateOperation& updateOperation, const Structure& value)
 	{
 		if (updateOperation == UpdateOperation::insert) {
 			m_AVLTree.Insert(&value);
@@ -118,5 +129,6 @@ namespace Getter {
 			m_AVLTree.Remove(&value);
 		}
 	}
+	
 }
 #endif

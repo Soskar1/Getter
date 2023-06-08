@@ -36,9 +36,6 @@
     <ClCompile Include="test.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Data.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="testing.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Experimentator.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Data.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="AVLTree.h">
