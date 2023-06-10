@@ -44,45 +44,6 @@ namespace Getter {
 		void Remove(const Structure& value);
 	};
 
-	/*class HashGetter {
-		struct LinkedList {
-			LinkedList* next;
-			Data* value;
-			bool allowedToRewrite;
-
-			LinkedList();
-			LinkedList(Data& value);
-			~LinkedList();
-		};
-
-		size_t HashInt(const int& value) const;
-		size_t HashDouble(const double& value) const;
-		size_t HashString(const std::string& value) const;
-
-		LinkedList* m_IntHashTable;
-		LinkedList* m_DoubleHashTable;
-		LinkedList* m_StringHashTable;
-		size_t m_Capacity;
-
-		void Insert(Data& value);
-		void Insert(Data& value, const size_t& hashIndex, LinkedList*& hashTable);
-
-		void Remove(Data& value);
-		void Remove(Data& value, const size_t& hashIndex, LinkedList*& hashTable);
-	public:
-		HashGetter();
-		HashGetter(std::vector<std::vector<Data>>& data);
-		~HashGetter();
-
-		void Create(std::vector<std::vector<Data>>& data);
-
-		Data* SearchByInt(const int& value) const;
-		Data* SearchByDouble(const double& value) const;
-		Data* SearchByString(const std::string& value) const;
-
-		void Update(const UpdateOperation& updateOperation, Data& value);
-	};*/
-
 	template<class Structure, typename FieldDataType>
 	inline TreeGetter<Structure, FieldDataType>::TreeGetter(Field field)
 	{
